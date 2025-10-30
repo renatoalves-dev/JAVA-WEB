@@ -6,17 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Customer {
+public class CarWasher {
 
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id;
-  private String firstName;
-  private String lastName;
+  private String modelo;
+  private String marca;
 
-  protected Customer() {}
+  protected CarWasher() {}
 
-  public Customer(String firstName, String lastName) {
+  public CarWasher(String modelo, String marca) {
     this.firstName = firstName;
     this.lastName = lastName;
   }
