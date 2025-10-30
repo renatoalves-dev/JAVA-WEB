@@ -1,30 +1,69 @@
-package com.carWasher.dao.jpa;
+package com.example.accessingdatajpa;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Customer {
+
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private Long id;
+  private String firstName;
+  private String lastName;
+
+  protected Customer() {}
+
+  public Customer(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        "Customer[id=%d, firstName='%s', lastName='%s']",
+        id, firstName, lastName);
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+}
+
+package com.example.accessingdatajpa;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import org.springframework.data.repository.CrudRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
-import com.carWasher.model.Car;
+  List<Customer> findByLastName(String lastName);
 
-@Repository
-@Transactional(rollbackFor = Exception.class)
-public class CarWasherRepository {
+  Customer findById(long id);
+}
 
-	@Autowired
-	private EntityManager entityManager;
+package com.example.accessingdatajpa;
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Car> getCars() {
-		return entityManager.createQuery("from Car", Car.class).getResultList();
-	}
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Car getCar(int id) {
-		return entityManager.find(Car.class, id);
-	}
+@SpringBootApplication
+public class AccessingDataJpaApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(AccessingDataJpaApplication.class, args);
+  }
+
 }
